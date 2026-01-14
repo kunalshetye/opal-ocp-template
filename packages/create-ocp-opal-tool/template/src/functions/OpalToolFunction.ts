@@ -88,9 +88,9 @@ export class OpalToolFunction extends ToolFunction {
     capabilities: string[];
   }> {
     return {
-      name: 'OCP Opal Tool Template',
+      name: '{{APP_DISPLAY_NAME}}',
       version: '1.0.0',
-      description: 'A template for building Opal tools on OCP',
+      description: '{{APP_DESCRIPTION}}',
       capabilities: [
         'hello_world - Generate greeting messages',
         'get_info - Get tool information'

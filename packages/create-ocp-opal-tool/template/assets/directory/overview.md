@@ -10,15 +10,15 @@
 
 ## Available Tools
 
-### tool_name_1
-Description of what this tool does.
+### hello_world
+Generates a friendly greeting message for a given name.
 
 **Parameters:**
-- `param1` (required): Description of param1
-- `param2` (optional): Description of param2
+- `name` (required): The name of the person to greet
+- `greeting_style` (optional): Style of greeting - "formal", "casual", or "enthusiastic"
 
-### tool_name_2
-Description of what this tool does.
+### get_info
+Returns information about this tool including version and capabilities.
 
 ## Getting Started
 

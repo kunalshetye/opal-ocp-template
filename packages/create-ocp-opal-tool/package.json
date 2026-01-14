@@ -1,0 +1,64 @@
+{
+  "name": "@kunalshetye/ocp-opal-wizard",
+  "version": "1.0.0",
+  "description": "CLI wizard to scaffold Optimizely Connect Platform (OCP) Opal Tools",
+  "type": "module",
+  "packageManager": "yarn@1.22.22",
+  "main": "./dist/index.js",
+  "bin": "./bin/ocp-opal-wizard.mjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "bin",
+    "template"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --test test/**/*.test.js",
+    "test:watch": "node --test --watch test/**/*.test.js",
+    "lint": "echo 'No linter configured'",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "picocolors": "^1.1.1",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/yargs": "^17.0.33",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "create",
+    "opal",
+    "optimizely",
+    "ocp",
+    "optimizely-connect-platform",
+    "tool",
+    "template",
+    "wizard",
+    "cli",
+    "scaffold"
+  ],
+  "author": "Optimizely",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kunalshetye/opal-ocp-template.git",
+    "directory": "packages/create-ocp-opal-tool"
+  },
+  "bugs": {
+    "url": "https://github.com/kunalshetye/opal-ocp-template/issues"
+  },
+  "homepage": "https://github.com/kunalshetye/opal-ocp-template#readme"
+}

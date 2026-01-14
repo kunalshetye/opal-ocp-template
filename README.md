@@ -1,225 +1,197 @@
-# OCP Opal Tool Template
+# OCP Opal Wizard
 
-A template for building Opal tools on Optimizely Connect Platform (OCP).
+A CLI wizard to scaffold **Optimizely Connect Platform (OCP) Opal Tools**.
 
 ## Quick Start
 
-### 1. Create Your Project
-
-Click "Use this template" on GitHub, or clone and reinitialize:
-
 ```bash
-git clone https://github.com/YOUR_USERNAME/opal_ocp_template.git my-opal-tool
-cd my-opal-tool
-rm -rf .git
-git init
-```
-
-### 2. Configure Your App
-
-Replace placeholders in these files:
-
-**package.json:**
-- `{{APP_ID}}` - Your app ID (e.g., `my_awesome_tool`)
-
-**app.yml:**
-- `{{APP_ID}}` - Same as above
-- `{{APP_DISPLAY_NAME}}` - Human-readable name (e.g., `My Awesome Tool`)
-- `{{APP_SUMMARY}}` - Short description
-- `{{GITHUB_USERNAME}}` - Your GitHub username
-- `{{REPO_NAME}}` - Your repository name
-- `{{CONTACT_EMAIL}}` - Support email
-- `{{TOOL_DESCRIPTION}}` - Description of what your tool does
-
-**assets/directory/overview.md:**
-- Update with your tool's documentation
-
-### 3. Install Dependencies
-
-```bash
-# Requires Node.js >= 22.0.0
-nvm use 22  # if using nvm
+npx @kunalshetye/ocp-opal-wizard create my-app
+cd my-app
 yarn install
-```
-
-### 4. Implement Your Tools
-
-Edit `src/functions/OpalToolFunction.ts`:
-- Replace example tools with your actual implementations
-- Use the `@tool` decorator for each tool method
-
-### 5. Build & Validate
-
-```bash
 yarn build
-yarn validate
 ```
 
-### 6. Register & Deploy
+> **Important:** Always use `npx` to run the wizard (not `yarn create`). The wizard runs via npm/npx, but the scaffolded project uses Yarn 1.x as required by OCP. This works regardless of which Yarn version you have installed globally.
+
+## What is an OCP Opal Tool?
+
+OCP Opal Tools are applications hosted on Optimizely Connect Platform (OCP) that extend the capabilities of Opal, Optimizely's AI assistant. These tools allow Opal to perform custom actions and integrations.
+
+## Prerequisites
+
+### 1. OCP Developer Account
+
+You need an OCP developer account. Contact Optimizely to get access.
+
+### 2. Install OCP CLI
 
 ```bash
-# First time only - register your app
-ocp app register
+# Create credentials file with your API key (from OCP developer invitation email)
+mkdir -p ~/.ocp
+echo '{"apiKey": "<YOUR_API_KEY>"}' > ~/.ocp/credentials.json
 
-# Get your tracker ID
+# Install OCP CLI globally (requires Yarn 1.x)
+yarn global add @optimizely/ocp-cli
+
+# Add to PATH
+export PATH="$(yarn global bin):$PATH"
+
+# Verify installation
 ocp accounts whoami
-
-# Prepare, publish, and install
-ocp app prepare
-ocp directory publish YOUR_APP_ID@1.0.0-dev.1
-ocp directory install YOUR_APP_ID@1.0.0-dev.1 YOUR_TRACKER_ID
 ```
 
-## Project Structure
+> **Note:** OCP requires Yarn 1.x (Classic). See the [Yarn Classic installation guide](https://classic.yarnpkg.com/lang/en/docs/install).
+
+For detailed setup, see [Configure your OCP development environment](https://docs.developers.optimizely.com/optimizely-connect-platform/docs/configure-your-development-environment-ocp2).
+
+## Usage
+
+### Interactive Mode (Recommended)
+
+```bash
+npx @kunalshetye/ocp-opal-wizard create
+```
+
+### With Project Name
+
+```bash
+npx @kunalshetye/ocp-opal-wizard create my-opal-tool
+```
+
+### Quick Setup with Defaults
+
+```bash
+npx @kunalshetye/ocp-opal-wizard create my-opal-tool --yes
+```
+
+### Dry Run (Preview)
+
+```bash
+npx @kunalshetye/ocp-opal-wizard create my-opal-tool --yes --dry-run
+```
+
+## What Gets Created
 
 ```
+my-opal-tool/
 ├── src/
-│   ├── index.ts                 # Main entry point
+│   ├── index.ts                    # Entry point
 │   ├── functions/
-│   │   └── OpalToolFunction.ts  # Your tool implementations
+│   │   └── OpalToolFunction.ts     # Tool implementations
 │   └── lifecycle/
-│       └── Lifecycle.ts         # OCP lifecycle hooks
+│       └── Lifecycle.ts            # OCP lifecycle hooks
 ├── forms/
-│   └── settings.yml             # Settings form definition
+│   └── settings.yml                # Settings form
 ├── assets/
-│   ├── icon.svg                 # App icon (64x64)
-│   ├── logo.svg                 # App logo (200x64)
+│   ├── icon.svg                    # App icon
+│   ├── logo.svg                    # App logo
 │   └── directory/
-│       └── overview.md          # App Directory description
-├── app.yml                      # OCP app manifest
-├── package.json                 # Dependencies and scripts
-└── tsconfig.json                # TypeScript configuration
+│       └── overview.md             # App Directory description
+├── app.yml                         # OCP manifest
+├── package.json
+├── tsconfig.json
+├── AGENTS.md                       # AI assistant guidance
+├── CLAUDE.md                       # AI assistant quick reference
+└── README.md
 ```
 
-## Adding Tools
-
-Use the `@tool` decorator to add new tools:
-
-```typescript
-@tool({
-  name: 'my_tool',
-  description: 'Description shown to Opal',
-  endpoint: '/tools/my-tool',
-  parameters: [
-    {
-      name: 'param1',
-      type: ParameterType.String,
-      description: 'Parameter description',
-      required: true
-    }
-  ]
-})
-async myTool(
-  parameters: { param1: string },
-  authData?: Record<string, unknown>
-): Promise<{ result: string }> {
-  // Your implementation
-  return { result: 'success' };
-}
-```
-
-### Parameter Types
-
-- `ParameterType.String`
-- `ParameterType.Number`
-- `ParameterType.Boolean`
-- `ParameterType.Object`
-- `ParameterType.Array`
-
-## Settings Form
-
-Edit `forms/settings.yml` to add configuration options:
-
-```yaml
-sections:
-  - key: section_key
-    label: Section Label
-    elements:
-      - key: field_key
-        label: Field Label
-        type: select          # or: text, toggle, secret
-        help: Help text here  # Required! Use 'help' not 'helpText'
-        options:              # For select type
-          - value: val1
-            text: Display 1   # Required! Use 'text' not 'label'
-          - value: val2
-            text: Display 2
-```
-
-## Lifecycle Hooks
-
-The `Lifecycle.ts` file handles app lifecycle events:
-
-- `onInstall()` - Called when app is installed
-- `onUpgrade(fromVersion)` - Called during upgrades
-- `onFinalizeUpgrade(fromVersion)` - Called after upgrade
-- `onUninstall()` - Called when app is uninstalled
-- `onSettingsForm(section, action, formData)` - Handles settings saves
-
-## Troubleshooting
-
-### Build Fails with "%5E3.0.11: Not found"
-
-Ensure `package.json` has the grpc-boom resolution:
-
-```json
-{
-  "resolutions": {
-    "grpc-boom": "3.0.11"
-  }
-}
-```
-
-### Build Fails with "Command 'lint' not found"
-
-Ensure `package.json` has lint and test scripts:
-
-```json
-{
-  "scripts": {
-    "lint": "echo 'No linter configured'",
-    "test": "echo 'No tests configured'"
-  }
-}
-```
-
-### Validation Fails for settings.yml
-
-- Use `help:` not `helpText:`
-- Use `text:` not `label:` in select options
-- Don't include `meta:` at root level
-
-### Checking Build Logs
+## After Scaffolding
 
 ```bash
-ocp app logs --buildId=BUILD_NUMBER
-```
+cd my-opal-tool
 
-## Deployment Commands Reference
+# Install dependencies (OCP requires Yarn 1.x)
+yarn install
 
-```bash
-# Build
+# Build the project
 yarn build
 
-# Validate locally
+# Validate configuration
 yarn validate
 
-# Prepare for upload
+# Deploy to OCP
+ocp app register
 ocp app prepare
-
-# Publish (dev version)
-ocp directory publish APP_ID@VERSION
-
-# Install to account
-ocp directory install APP_ID@VERSION TRACKER_ID
-
-# Check build logs
-ocp app logs --buildId=NUMBER
-
-# Get tracker ID
-ocp accounts whoami
+ocp directory install <APP_ID>@<VERSION> <TRACKER_ID>
 ```
+
+## CLI Options
+
+```bash
+ocp-opal-wizard create [directory] [options]
+
+Arguments:
+  [directory]          Project directory (default: interactive prompt)
+
+Options:
+  -y, --yes            Skip prompts, use defaults
+  --no-git             Skip git initialization
+  --dry-run            Show what would be done without making changes
+
+  --app-id             OCP App ID
+  --display-name       App display name
+  --description        App description
+  --tracker-id         OCP Tracker ID for deployment
+  --email              Contact email
+
+  -h, --help           Show help message
+  -v, --version        Show version number
+```
+
+## Repository Structure
+
+```
+opal-ocp-template/
+├── packages/
+│   └── create-ocp-opal-tool/       # The CLI wizard (@kunalshetye/ocp-opal-wizard)
+│       ├── src/                    # CLI source code
+│       ├── template/               # Template files for scaffolding
+│       ├── test/                   # Tests (68 tests)
+│       ├── docs/                   # Development documentation
+│       └── bin/                    # CLI entry point
+├── AGENTS.md                       # AI guidance for repo contributors
+├── CLAUDE.md                       # AI quick reference for repo
+└── README.md                       # This file
+```
+
+## Development
+
+To contribute to the wizard itself:
+
+```bash
+# Clone the repo
+git clone https://github.com/kunalshetye/opal-ocp-template.git
+cd opal-ocp-template/packages/create-ocp-opal-tool
+
+# Install dependencies
+npm install
+
+# Build
+npm run build
+
+# Run tests
+npm test
+
+# Test locally
+node bin/ocp-opal-wizard.mjs create test-project --yes --dry-run
+```
+
+See [packages/create-ocp-opal-tool/docs/LOCAL_DEVELOPMENT.md](packages/create-ocp-opal-tool/docs/LOCAL_DEVELOPMENT.md) for detailed development instructions.
+
+## Learn More
+
+- [OCP Documentation](https://docs.developers.optimizely.com/optimizely-connect-platform/docs)
+- [Configure OCP Development Environment](https://docs.developers.optimizely.com/optimizely-connect-platform/docs/configure-your-development-environment-ocp2)
+- [Opal Tool SDK](https://www.npmjs.com/package/@optimizely-opal/opal-tool-ocp-sdk)
 
 ## License
 
 MIT
+
+## Author
+
+[Kunal Shetye](https://github.com/kunalshetye)
+
+---
+
+**Note:** This is a community project and is not officially supported by Optimizely.
