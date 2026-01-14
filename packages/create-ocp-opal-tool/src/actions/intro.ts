@@ -6,7 +6,7 @@ import * as p from '@clack/prompts';
 import pc from 'picocolors';
 import type { Context } from '../types.js';
 
-const PACKAGE_VERSION = '1.0.0';
+const PACKAGE_VERSION = '1.0.1';
 
 export async function intro(
   ctx: Pick<Context, 'packageManager'>

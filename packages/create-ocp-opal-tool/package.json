@@ -1,6 +1,6 @@
 {
   "name": "@kunalshetye/ocp-opal-wizard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI wizard to scaffold Optimizely Connect Platform (OCP) Opal Tools",
   "type": "module",
   "packageManager": "yarn@1.22.22",

@@ -79,7 +79,7 @@ export async function getContext(argv: string[]): Promise<Context> {
     })
     .help('help')
     .alias('h', 'help')
-    .version('1.0.0')
+    .version('1.0.1')
     .alias('v', 'version')
     .parse();
 
