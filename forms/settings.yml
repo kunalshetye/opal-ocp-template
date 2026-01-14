@@ -1,0 +1,15 @@
+sections:
+  - key: general
+    label: General Settings
+    elements:
+      - key: example_setting
+        label: Example Setting
+        type: select
+        help: This is an example setting. Replace with your actual settings.
+        options:
+          - value: option1
+            text: Option 1
+          - value: option2
+            text: Option 2
+          - value: option3
+            text: Option 3
