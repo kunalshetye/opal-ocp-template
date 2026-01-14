@@ -187,14 +187,31 @@ ocp app logs --buildId=BUILD_NUMBER
 
 ## Tool Definition Pattern
 
+**Important:** Detailed tool descriptions help Opal understand when to use each tool. Include:
+- What the tool does
+- When to use it
+- When NOT to use it
+- Example usage
+
 ```typescript
 import 'reflect-metadata';
-import { ToolFunction, tool, ParameterType } from '@optimizely-opal/opal-tool-ocp-sdk';
+import { ToolFunction, tool, ParameterType, OptiIdAuthData } from '@optimizely-opal/opal-tool-ocp-sdk';
 
 export class OpalToolFunction extends ToolFunction {
   @tool({
     name: 'tool_name',              // snake_case
-    description: 'What this tool does',
+    description: `
+      Brief description of what this tool does.
+
+      Use this tool when:
+      - Specific scenario 1
+      - Specific scenario 2
+
+      Do NOT use this tool when:
+      - Wrong scenario 1
+
+      Example: "Do something with X" -> { param_name: "X" }
+    `,
     endpoint: '/tools/tool-name',   // kebab-case
     parameters: [
       {
@@ -207,11 +224,38 @@ export class OpalToolFunction extends ToolFunction {
   })
   async toolName(
     parameters: { param_name: string },
-    authData?: Record<string, unknown>
+    authData?: OptiIdAuthData
   ): Promise<{ result: string }> {
     // Implementation
     return { result: 'value' };
   }
+}
+```
+
+### Tools with Authentication
+
+For tools that need user credentials (configured in settings form):
+
+```typescript
+@tool({
+  name: 'get_external_data',
+  description: 'Fetches data from external API',
+  endpoint: '/tools/external-data',
+  parameters: [...],
+  authRequirements: [{
+    provider: 'OptiID',
+    scopeBundle: 'your_app_id',
+    required: true
+  }]
+})
+async getExternalData(
+  parameters: { id: string },
+  authData?: OptiIdAuthData
+): Promise<{ data: unknown }> {
+  // Extract credentials from authData
+  const credentials = authData?.credentials as { api_key: string };
+  // Use credentials to call external API
+  return { data: result };
 }
 ```
 
